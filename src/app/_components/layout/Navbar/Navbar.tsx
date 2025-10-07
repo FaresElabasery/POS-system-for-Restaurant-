@@ -39,6 +39,7 @@ export default function Navbar() {
     const navLinks = [
         { title: 'Home', link: '/' },
         { title: 'Tables', link: '/table' },
+        { title: 'Products', link: '/products' },
     ]
     return (
         <header className={`z-30 text-black bg-transparent  w-full sticky top-0  backdrop-blur-2xl border-b`}>

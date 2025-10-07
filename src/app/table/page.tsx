@@ -6,7 +6,7 @@ import RadioGroup from "../_components/shared/RadioFilterGroup/RadioFilterGroup"
 import TableCard from "../_components/shared/TableCard/TableCard"
 
 export default function Table() {
-    const tables = useAppSelector(state=>state.tables.tables)
+    const tables = useAppSelector(state => state.tables.tables)
     const [status, setStatus] = useState<TableStatus | 'All'>('All')
 
     const displayFilterTable = () => {
@@ -21,12 +21,15 @@ export default function Table() {
     }
     console.log(displayFilterTable());
     console.log(tables);
-        
+
 
     return (
-        <div className="bg-white mt-10">
+        <div className="bg-white mt-5">
             <div className="container">
-                <div className="filter flex flex-col gap-4 md:flex-row justify-between items-center shadow-2xl mb-10 rounded-2xl p-4 w-10/12 mx-auto">
+                <div className='title mb-5'>
+                    <h1 className='text-5xl font-bold text-center text-amber-600'>Tables</h1>
+                </div>
+                <div className="filter flex flex-col gap-4 md:flex-row justify-between items-center shadow-2xl mb-5 rounded-2xl p-4 w-10/12 mx-auto">
                     <div className="text-2xl font-bold ">
                         <RadioGroup status={status} setStatus={setStatus} />
                     </div>

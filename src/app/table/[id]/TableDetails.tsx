@@ -2,6 +2,7 @@
 import CheckBoxFilterCard from "@/app/_components/shared/CheckBoxFilterCard/CheckBoxFilterCard";
 import OrderColumn from "@/app/_components/shared/OrderColumn/OrderColumn";
 import ProductCard from "@/app/_components/shared/ProductCard/ProductCard";
+import { SkeletonCard } from "@/app/_components/shared/SkeletonCard/SkeletonCard";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -9,11 +10,10 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { IProduct } from "@/Interfaces/product";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import pizza from '@images/pizza.png';
+import { getAllProducts } from "@/store/slices/productSlice";
 import { ArrowRightCircle, Barcode, Search, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useEffect } from "react";
 
 
 interface TableDetailsProps {
@@ -70,63 +70,15 @@ export default function TableDetails({ id }: TableDetailsProps) {
             status: false,
         },
     ]
-    const [products, setProducts] = useState<IProduct[]>([
-        {
-            id: 1,
-            code: "Pizza-l",
-            name: "Pizza Large",
-            price: 200,
-            stock: 2,
-            image: pizza,
-            count: 1,
 
-        },
-        {
-            id: 2,
-            code: "Burger-L",
-            name: "Burger Large",
-            price: 120,
-            stock: 5,
-            image: pizza,
-            count: 1,
+    const products = useAppSelector(state => state.products.products);
+    console.log(products);
 
-        },
-        {
-            id: 3,
-            code: "Pasta-L",
-            name: "Pasta Large",
-            price: 150,
-            stock: 3,
-            image: pizza,
-            count: 1,
-
-        },
-        {
-            id: 4,
-            code: "Salad-L",
-            name: "Salad Large",
-            price: 80,
-            stock: 10,
-            image: pizza,
-            count: 1,
-
-        },
-        {
-            id: 5,
-            name: "Soda",
-            code: "Soda-L",
-            price: 50,
-            stock: 20,
-            image: pizza,
-            count: 1,
-
-        },
-    ]);
     const dispatch = useAppDispatch()
     console.log(tableOrder);
-    
-  
-
+    useEffect(() => {
+        dispatch(getAllProducts());
+    }, [dispatch])
 
     return (
         <div className=" mt-10 mx-auto">
@@ -165,6 +117,9 @@ export default function TableDetails({ id }: TableDetailsProps) {
                             </div>
                         </div>
                         <div className="products grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                            {products.length === 0 && Array.from({ length: 6 }).map((_, index) => (
+                                <SkeletonCard key={index} />
+                            ))}
                             {products.map((product) => (
                                 <ProductCard key={product.id} product={product} tableId={tableId} />
                             ))}
