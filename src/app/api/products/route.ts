@@ -24,7 +24,7 @@ export async function POST(req: Request) {
                 name,
                 price,
                 stock,
-                image,
+                image
             }
         })
         return NextResponse.json({ message: 'product created successfully', newProduct }, { status: 201 })

@@ -1,6 +1,6 @@
 
 export type IProduct = {
-    id: number,
+    id: string,
     code: string
     name: string,
     price: number,
