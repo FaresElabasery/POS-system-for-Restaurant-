@@ -1,24 +1,54 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
+        const tableId = searchParams.get("id");
+
+        if (!tableId) {
+            return NextResponse.json(
+                { error: "tableId is required" },
+                { status: 400 }
+            );
+        }
+
+        const existing = await prisma.table.findUnique({
+            where: { id: tableId },
+        });
+
+        if (!existing) {
+            return NextResponse.json(
+                { error: "Table not found" },
+                { status: 404 }
+            );
+        }
+
         const orders = await prisma.order.findMany({
+            where: { tableId: tableId },
             include: {
                 table: true,
                 items: {
                     include: {
-                        product: true
-                    }
-                }
-            }
-        })
-        return NextResponse.json({ message: 'success', orders }, { status: 200 })
+                        product: true,
+                    },
+                },
+            },
+        });
+
+        return NextResponse.json(
+            { message: "success", orders },
+            { status: 200 }
+        );
     } catch (error) {
-        console.log('error fetching orders', error);
-        return NextResponse.json({ message: 'error fetching orders' }, { status: 500 })
+        console.error("Error fetching orders:", error);
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
     }
 }
+
 export async function POST(req: Request) {
     try {
         const body = await req.json();

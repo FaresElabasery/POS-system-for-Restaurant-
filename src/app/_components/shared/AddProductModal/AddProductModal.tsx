@@ -127,7 +127,6 @@ export default function AddProductModal() {
                                 onChange={async (e) => {
                                     const file = e.target.files?.[0];
                                     if (!file) return;
-
                                     const uploadedUrl = await handleImageUpload(file);
                                     if (uploadedUrl) {
                                         setValue("image", uploadedUrl);
@@ -164,7 +163,7 @@ export default function AddProductModal() {
                         <DialogClose asChild>
                             <Button onClick={() => (reset(), setPreview(''))} className="bg-red-500 text-white hover:bg-red-600">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-amber-600 text-white hover:bg-amber-300">Save changes</Button>
+                        <Button type="submit" className="bg-amber-600 text-white hover:bg-amber-300">Add Product</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

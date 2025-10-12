@@ -7,10 +7,10 @@ import { clearOrderFromTable, completeOrderForTable } from '@/store/slices/order
 import { updateTableStatus } from '@/store/slices/tableSlice';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-export default function OrderColumn({ selectedProducts, tableId }: { selectedProducts: IProduct[], tableId: number }) {
+export default function OrderColumn({ selectedProducts, tableId }: { selectedProducts: IProduct[], tableId: string }) {
     const route = useRouter();
     const handleTotalOrders = () => {
-        return selectedProducts.reduce((acc, item) => acc + item?.price * item?.count, 0);
+        return selectedProducts.reduce((acc, item) => acc + item?.price * Number(item?.count), 0);
     }
     const dispatch = useAppDispatch()
 

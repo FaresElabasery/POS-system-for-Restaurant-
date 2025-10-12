@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { getTables } from '@/services/table'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface Table {
     id: number
@@ -10,16 +11,13 @@ interface Table {
 interface TablesState {
     tables: Table[]
 }
+const getAllTables = createAsyncThunk('tables/getAllTables', async () => {
+    const res = await getTables()
+    return res.tables
+})
 
 const initialState: TablesState = {
-    tables: [
-        { id: 1, name: 'Table 1', status: 'closed', numberChair: 4 },
-        { id: 2, name: 'Table 2', status: 'closed', numberChair: 6 },
-        { id: 3, name: 'Table 3', status: 'closed', numberChair: 2 },
-        { id: 4, name: 'Table 4', status: 'closed', numberChair: 2 },
-        { id: 5, name: 'Table 5', status: 'closed', numberChair: 2 },
-        { id: 6, name: 'Table 6', status: 'closed', numberChair: 2 },
-    ],
+    tables: [],
 }
 
 const tableSlice = createSlice({
@@ -40,7 +38,13 @@ const tableSlice = createSlice({
             }
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(getAllTables.fulfilled, (state, action) => {
+            state.tables = action.payload
+        })
+    }
 })
 
 export const { openTable, updateTableStatus } = tableSlice.actions
 export default tableSlice.reducer
+export { getAllTables }

@@ -21,7 +21,7 @@ interface TableDetailsProps {
 }
 
 export default function TableDetails({ id }: TableDetailsProps) {
-    const tableId = Number(id);
+    const tableId = id;
     console.log(tableId);
 
 

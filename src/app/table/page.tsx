@@ -1,16 +1,19 @@
 'use client'
 import { TableStatus } from "@/Interfaces/table"
-import { useAppSelector } from "@/store/hooks"
-import { useState } from "react"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
+import { getAllTables } from "@/store/slices/tableSlice"
+import { useEffect, useState } from "react"
 import RadioGroup from "../_components/shared/RadioFilterGroup/RadioFilterGroup"
 import TableCard from "../_components/shared/TableCard/TableCard"
+import AddTableModal from "../_components/shared/AddTableModal/AddTableModal"
 
 export default function Table() {
-    const tables = useAppSelector(state => state.tables.tables)
+    const tables = useAppSelector(state => state.tables.tables) || []
+    const dispatch = useAppDispatch()
     const [status, setStatus] = useState<TableStatus | 'All'>('All')
 
     const displayFilterTable = () => {
-        const filterTables = tables.slice()
+        const filterTables = tables?.slice()
         if (status === 'closed') {
             return filterTables.filter((item) => item.status === 'closed')
         }
@@ -22,12 +25,16 @@ export default function Table() {
     console.log(displayFilterTable());
     console.log(tables);
 
+    useEffect(() => {
+        dispatch(getAllTables())
+    }, [dispatch])
 
     return (
         <div className="bg-white mt-5">
             <div className="container">
-                <div className='title mb-5'>
-                    <h1 className='text-5xl font-bold text-center text-amber-600'>Tables</h1>
+                <div className='title my-5 flex-center gap-2'>
+                    <h1 className='text-5xl font-bold text-center'>All Tables</h1>
+                    <AddTableModal />
                 </div>
                 <div className="filter flex flex-col gap-4 md:flex-row justify-between items-center shadow-2xl mb-5 rounded-2xl p-4 w-10/12 mx-auto">
                     <div className="text-2xl font-bold ">
@@ -44,10 +51,10 @@ export default function Table() {
                         </div>
                     </div>
                 </div>
-                <div className="content grid sm:grid-cols-2 md:grid-cols-3 gap-20 bg-gray-100 rounded-2xl p-4 shadow min-h-110">
+                <div className="content grid sm:grid-cols-2 md:grid-cols-3 gap-5 bg-gray-100 rounded-2xl p-4 shadow min-h-110">
                     {
                         displayFilterTable()?.map((item) => (
-                            <TableCard key={item.id} item={item} />
+                            <TableCard key={item.id} item={item} from="table" />
                         ))
                     }
                 </div>

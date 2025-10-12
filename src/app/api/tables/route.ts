@@ -5,7 +5,7 @@ export async function GET() {
     try {
         const tables = await prisma.table.findMany(
             { orderBy: { name: "asc" } })
-        return NextResponse.json(tables)
+        return NextResponse.json({ message: 'success', tables })
     } catch (error) {
         console.log('error Fetching tables', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
             data: {
                 name,
                 numberChair,
-                status:'closed'
+                status: 'closed'
             }
         })
         return NextResponse.json({ message: 'Table created successfully', table }, { status: 201 })
