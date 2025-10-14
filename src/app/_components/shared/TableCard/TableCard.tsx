@@ -1,16 +1,15 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { DialogFooter, DialogHeader } from "@/components/ui/dialog";
-import { Table } from "@/Interfaces/table";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Trash, User } from "lucide-react";
-import Link from "next/link";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ITable } from "@/Interfaces/table";
 import { DeleteTable } from "@/services/table";
-import { toast } from "sonner";
 import { useAppDispatch } from "@/store/hooks";
 import { getAllTables } from "@/store/slices/tableSlice";
+import { Trash, User } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
-export default function TableCard({ item, from }: { item: Table, from?: 'table' | 'order' }) {
+export default function TableCard({ item, from }: { item: ITable, from?: 'table' | 'order' }) {
     const dispatch = useAppDispatch()
     const handleDeleteTable = async () => {
         const res = await DeleteTable(item.id)
