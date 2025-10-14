@@ -1,16 +1,42 @@
 'use client'
+import { deleteProductFromOrder, UpdateProductCountInOrder } from "@/app/table/[id]/TableDetials.actions";
 import { IProduct } from "@/Interfaces/product";
 import { useAppDispatch } from "@/store/hooks";
-import { addproductToTable, removeProductFromTable } from "@/store/slices/ordersByTableSlice";
-import { decreaseProductCount } from "@/store/slices/ordersByTableSlice";
+import { getOrder } from "@/store/slices/ordersSlice";
+import { getAllProducts } from "@/store/slices/productSlice";
 import { Trash } from "lucide-react";
+import { toast } from "sonner";
 
-export default function OrderCard({ product, tableId }: { product: IProduct, tableId: number }) {
-    const { name, price, code, stock } = product;
+type IProductWithCount = {
+    product: IProduct,
+    count: number
+}
+export default function OrderCard({ product, tableId }: { product: IProductWithCount, tableId: string }) {
     const dispatch = useAppDispatch();
+    const { name, price, code, stock, id } = product.product;
+    console.log(product);
+
+    const handleDeleteProduct = async () => {
+        const res = await deleteProductFromOrder({ id: tableId.toString(), productId: id.toString() });
+        if (res.message) {
+            toast.success(res.message);
+            dispatch(getOrder(tableId));
+        } else {
+            toast.error(res.error);
+        }
+    }
+    const handleUpdateCount = async (count: number) => {
+        const res = await UpdateProductCountInOrder({ id: tableId.toString(), productId: id.toString() }, count);
+        if (!res.error) {
+            toast.success(res.message);
+            dispatch(getOrder(tableId));
+        } else {
+            toast.error(res.error);
+        }
+    }
     return (
         <div className="bg-gray-200 px-4 py-2 rounded-2xl shadow-md relative">
-            <span onClick={() => dispatch(removeProductFromTable({ tableId, productId: product.id }))} className="absolute top-2 right-4 text-xs text-orange-500 font-medium flex-center bg-white rounded-full size-6 active:scale-105 hover:bg-red-500 hover:text-white"><Trash size={18} /></span>
+            <span onClick={handleDeleteProduct} className="absolute top-2 right-4 text-xs text-orange-500 font-medium flex-center bg-white rounded-full size-6 active:scale-105 hover:bg-red-500 hover:text-white"><Trash size={18} /></span>
             <div className="flex flex-col justify-between ">
                 <p className="text-sm text-gray-500">Product Code : {code}</p>
                 <div className="flex  justify-between my-3">
@@ -23,11 +49,11 @@ export default function OrderCard({ product, tableId }: { product: IProduct, tab
                     <div className="flex flex-col items-end ">
                         {/* increase and decrease */}
                         <div className="flex items-center justify-between  bg-white rounded-md border-2">
-                            <button disabled={product.count <= 1} onClick={() => dispatch(decreaseProductCount({ tableId, productId: product.id }))} className="w-8 h-8 flex border-r items-center justify-center text-gray-600 hover:text-gray-800">
+                            <button disabled={product.count <= 1} onClick={() => handleUpdateCount(-1)} className="w-8 h-8 flex border-r items-center justify-center text-gray-600 hover:text-gray-800">
                                 <span className="text-lg font-bold">-</span>
                             </button>
                             <span className="w-8 h-8 flex items-center justify-center text-gray-600 font-bold">{product.count}</span>
-                            <button disabled={product.count >= stock} onClick={() => dispatch(addproductToTable({ tableId, product }))} className="w-8 h-8 flex  border-l items-center justify-center text-gray-600 hover:text-gray-800">
+                            <button disabled={product.count >= stock} onClick={() => handleUpdateCount(1)} className="w-8 h-8 flex  border-l items-center justify-center text-gray-600 hover:text-gray-800">
                                 <span className="text-lg font-bold">+</span>
                             </button>
                         </div>

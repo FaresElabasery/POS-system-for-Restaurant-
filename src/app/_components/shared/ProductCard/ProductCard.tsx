@@ -1,13 +1,8 @@
 'use client'
 import Image from "next/image";
 
-import { IProduct } from "@/Interfaces/product";
-import placeholder from '@images/placeholder.svg';
-import { useAppDispatch } from '@/store/hooks';
-import { addproductToTable } from "@/store/slices/ordersByTableSlice";
-import { openTable } from "@/store/slices/tableSlice";
-import { deleteProduct } from "@/services/product";
-import { Trash } from "lucide-react";
+import { AddProductToOrder, AddProductToOrderBody } from "@/app/table/[id]/TableDetials.actions";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -16,28 +11,52 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { toast } from "sonner";
+} from "@/components/ui/dialog";
+import { IProduct } from "@/Interfaces/product";
+import { deleteProduct } from "@/services/product";
+import { useAppDispatch } from '@/store/hooks';
 import { getAllProducts } from "@/store/slices/productSlice";
+import placeholder from '@images/placeholder.svg';
+import { DialogClose } from "@radix-ui/react-dialog";
+import { Trash } from "lucide-react";
+import { toast } from "sonner";
+import { getOrder } from "@/store/slices/ordersSlice";
 
-export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId?: number, from?: string }) {
+export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId: string, from?: string }) {
     const dispatch = useAppDispatch()
     const { id, name, price, stock, image, code } = product;
-    const handleAddToTable = () => {
-        if (!tableId) return;
-        dispatch(addproductToTable({ tableId, product }));
-        dispatch(openTable({ tableId }));
+    const handleAddToTable = async () => {
+        const res = await AddProductToOrder({
+            tableId: tableId?.toString() || '',
+            items: [{
+                productId: id,
+                count: 1
+            }]
+        } as AddProductToOrderBody)
+        if (res.message) {
+            toast.success(res.message, {
+                position: 'top-right'
+            })
+            dispatch(getOrder(tableId));
+        }
+        else {
+            toast.error(res.error, {
+                position: 'top-right'
+            })
+        }
     }
     const handleDeleteProduct = async () => {
         const res = await deleteProduct(id)
         if (res.message === 'Product deleted successfully') {
             dispatch(getAllProducts())
-            toast.success(res.message)
+            toast.success(res.message,{
+                position:'top-right'
+            })
         }
         else {
-            toast.error(res.error)
+            toast.error(res.error, {
+                position: 'top-right'
+            })
             dispatch(getAllProducts())
         }
     }

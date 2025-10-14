@@ -18,15 +18,15 @@ export default function TableCard({ item, from }: { item: Table, from?: 'table' 
             toast.success(res.message)
             dispatch(getAllTables())
         } else {
-            toast.error(res.message)
+            toast.error(res.error)
         }
     }
     return (
-        <div className="relative overflow-hidden ">
+        <div className="relative overflow-hidden h-fit">
             {from === 'table' && (
                 <Dialog >
                     <DialogTrigger>
-                        <button className="absolute bottom-0 z-50 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</button>
+                        <button className="absolute z-10 bottom-0 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -51,7 +51,6 @@ export default function TableCard({ item, from }: { item: Table, from?: 'table' 
                     <span className="text-sm font-bold text-white"> {item.name}</span>
                     <span className="text-sm font-bold text-white flex items-center gap-1"><User size={20} /> {item.numberChair}</span>
                 </div>
-
                 <span className={`w-2 h-2 rounded-full absolute top-2 right-2 ${item.status === 'opened' ? 'bg-green-600' : item.status === 'closed' ? 'bg-orange-600' : 'bg-yellow-600'}`}></span>
                 <div className="p-2 flex flex-wrap gap-2 justify-center items-center">
                     {Array.from({ length: item.numberChair }).map((_, index) => (

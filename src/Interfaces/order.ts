@@ -1,13 +1,18 @@
-import { IProduct } from "./product";
+import { IProduct } from "./product"
+import { ITable } from "./table"
 
-export type OrderItem = IProduct & { count: number }
-
-export type SingleOrder = {
-    id: number,
-    items: OrderItem[],
-    status: 'closed' | 'opened',
+export interface IOrder {
+    id: string
+    tableId: string
+    status: string
     createdAt: string
+    table: ITable
+    items: Item[]
 }
-export type OrderState = {
-    byTable: Record<number, SingleOrder | undefined>
+export interface Item {
+    id: string
+    productId: string
+    count: number
+    orderId: string
+    product: IProduct
 }

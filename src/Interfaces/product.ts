@@ -7,3 +7,4 @@ export type IProduct = {
     stock: number,
     image?: string
 }
+

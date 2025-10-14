@@ -3,9 +3,6 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export async function getProducts() {
     try {
         const res = await fetch(`/api/products`, {
-            next: {
-                revalidate: 10
-            }
         })
         const finalResult = await res.json()
         return finalResult

@@ -11,24 +11,24 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getOrder } from "@/store/slices/ordersSlice";
 import { getAllProducts } from "@/store/slices/productSlice";
 import { ArrowRightCircle, Barcode, Search, ShoppingBag } from "lucide-react";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-
 
 interface TableDetailsProps {
     id: string;
 }
 
 export default function TableDetails({ id }: TableDetailsProps) {
+    const dispatch = useAppDispatch()
+    const order = useAppSelector(state => state.orders.data);
+
+
     const tableId = id;
     console.log(tableId);
 
-
-    const tableOrder = useAppSelector(state => state.ordersByTable.byTable[tableId])
-    const selectedProducts = tableOrder?.items || []
-
-    console.log(tableOrder);
 
     const categories = [
         {
@@ -74,10 +74,9 @@ export default function TableDetails({ id }: TableDetailsProps) {
     const products = useAppSelector(state => state.products.products);
     console.log(products);
 
-    const dispatch = useAppDispatch()
-    console.log(tableOrder);
     useEffect(() => {
         dispatch(getAllProducts());
+        dispatch(getOrder(tableId));
     }, [dispatch])
 
     return (
@@ -93,7 +92,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                                 </span>
                             </DialogTrigger>
                             <DialogContent className=" rounded-2xl">
-                                <OrderColumn selectedProducts={selectedProducts} tableId={tableId} />
+                                <OrderColumn order={order} tableId={tableId} />
                             </DialogContent>
                         </Dialog>
                         <div className="filter w-full">
@@ -126,7 +125,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                         </div>
                     </div>
                     <div className="order hidden md:block">
-                        <OrderColumn selectedProducts={selectedProducts} tableId={tableId} />
+                        <OrderColumn order={order} tableId={tableId} />
                     </div>
                 </div>
             </div>

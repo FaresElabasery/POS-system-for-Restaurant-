@@ -1,10 +1,8 @@
-import { SingleOrder } from "./order";
 
-export interface Table {
-    id: string;
-    name: string;
-    numberChair: number;
-    status: TableStatus;
-    orders: SingleOrder[]
+export interface ITable {
+    id: string
+    name: string
+    numberChair: number
+    status: TableStatus
 }
-export type TableStatus = 'closed' | 'opened' ; 
+export type TableStatus = 'closed' | 'opened'; 
