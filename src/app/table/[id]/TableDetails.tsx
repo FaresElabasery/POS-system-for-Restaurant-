@@ -10,12 +10,13 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { getTables } from "@/services/table";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getOrder } from "@/store/slices/ordersSlice";
 import { getAllProducts } from "@/store/slices/productSlice";
 import { ArrowRightCircle, Barcode, Search, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface TableDetailsProps {
     id: string;
@@ -23,6 +24,7 @@ interface TableDetailsProps {
 
 export default function TableDetails({ id }: TableDetailsProps) {
     const dispatch = useAppDispatch()
+    const [tableName, setTableName] = useState<string>('')
     const order = useAppSelector(state => state.orders.data);
 
 
@@ -75,9 +77,15 @@ export default function TableDetails({ id }: TableDetailsProps) {
     console.log(products);
 
     useEffect(() => {
+        async function handleGetTableName() {
+            const table = await getTables();
+            const tableName = table?.tables.filter((item: { id: string }) => item.id === tableId)[0]?.name;
+            setTableName(tableName);
+        }
+        handleGetTableName();
         dispatch(getAllProducts());
         dispatch(getOrder(tableId));
-    }, [dispatch])
+    }, [])
 
     return (
         <div className=" mt-10 mx-auto">
@@ -96,7 +104,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                             </DialogContent>
                         </Dialog>
                         <div className="filter w-full">
-                            <h1 className="text-2xl font-bold mb-5 text-center sm:text-start">New Order for Table {id}</h1>
+                            <h1 className="text-2xl font-bold mb-5 text-center sm:text-start">New Order for {tableName}</h1>
                             <div className="search filter gap-3 flex items-center justify-between w-full">
                                 <div className="relative md:w-1/3">
                                     <Input className="ps-10 placeholder:text-gray-400 md:w-full border-gray-300" type="search" placeholder="Scan Barcode" />

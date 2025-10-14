@@ -1,45 +1,32 @@
 'use client'
+import { createCategory } from "@/app/category/category.actions";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as zod from 'zod'
-import { createProduct } from "@/services/product";
-import { toast } from "sonner";
-import { Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { getAllProducts } from "@/store/slices/productSlice";
 import { useAppDispatch } from "@/store/hooks";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getCategories } from "@/services/categoreis";
-import { ICategory } from "@/Interfaces/category";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as zod from 'zod';
 
 
-export default function AddProductModal() {
+export default function AddCategoryModal() {
     const dispatch = useAppDispatch()
     const [openModal, setOpenModal] = useState(false)
-    const [categories, setCategories] = useState<ICategory[]>([])
     const [preview, setPreview] = useState('')
     const schema = zod.object({
         'name': zod.string().min(3, 'min 3 characters'),
-        'code': zod.string().min(3, 'min 3 characters'),
-        'price': zod.coerce.number().min(0, 'Price must be greater than or equal to 0'),
-        'stock': zod.coerce.number().max(1000, 'Stock must be less than or equal to 1000').min(0, 'Stock must be greater than or equal to 0'),
         'image': zod.string().url('Please upload a valid image'),
-        'categoryId': zod.string().min(1, 'Please select a category')
     })
 
-    const { register, handleSubmit, formState: { errors }, control, setValue, reset, setError, getValues } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, setValue, reset, setError } = useForm({
         'defaultValues': {
             'name': '',
-            'code': '',
-            'price': 0,
-            'stock': 0,
             'image': '',
-            'categoryId': ''
         },
         mode: 'onSubmit',
         resolver: zodResolver(schema)
@@ -70,33 +57,22 @@ export default function AddProductModal() {
         return data.url;
     };
 
-    const handleAddProduct = async (values: zod.infer<typeof schema>) => {
+     const handleAddCategory = async (values: zod.infer<typeof schema>) => {
         if (!values.image) {
             toast.error('Please upload an image before saving')
             return;
         }
-        const response = await createProduct(values);
+        const response = await createCategory(values);
 
         if (response) {
-            toast.success('Product added successfully');
-            dispatch(getAllProducts())
+            toast.success('Category added successfully');
             setOpenModal(false);
             reset()
             setPreview('')
         } else {
-            toast.error('Product addition failed');
+            toast.error('Category addition failed');
         }
     }
-
-    useEffect(() => {
-        async function handleGetCategories() {
-            const categories = await getCategories()
-            if (categories) {
-                setCategories(categories)
-            }
-        }
-        handleGetCategories()
-    }, [])
 
     return (
         <Dialog open={openModal} onOpenChange={setOpenModal}>
@@ -112,12 +88,12 @@ export default function AddProductModal() {
             </Tooltip>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add New Product</DialogTitle>
+                    <DialogTitle>Add New Category</DialogTitle>
                     <DialogDescription>
-                        Add a new product to the inventory.
+                        Add a new category to the inventory.
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(handleAddProduct)}>
+                <form onSubmit={handleSubmit(handleAddCategory)}>
                     <div className="grid grid-cols-2 gap-4 items-center">
                         <div className=" ">
                             <span className="size-40 block rounded-full overflow-hidden bg-white border-2">
@@ -156,58 +132,18 @@ export default function AddProductModal() {
                         </div>
                         <div className="grid gap-3 col-span-2">
                             <label className="text-sm font-semibold" htmlFor="name-1">Name</label>
-                            <Input type="text" placeholder="Pizza" id="name-1"{...register('name')} />
+                            <Input type="text" placeholder="Chicken Or Beaf ..." id="name-1"{...register('name')} />
                             {errors.name && <span className="text-red-500 text-xs">{errors.name.message}</span>}
                         </div>
-                        <div className="grid gap-3 ">
-                            <label className="text-sm font-semibold" htmlFor="category-1">Category</label>
-                            <Controller
-                                name="categoryId"
-                                control={control}
-                                render={({ field }) => (
-                                    <Select value={field.value} onValueChange={field.onChange}>
-                                        <SelectTrigger className="w-[180px]">
-                                            <SelectValue placeholder="Select a category" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                <SelectLabel>Categories</SelectLabel>
-                                                {categories.map((item) => (
-                                                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
-                                )}
-                            />
-                            {errors.categoryId && <span className="text-red-500 text-xs">{errors.categoryId.message}</span>}
-                        </div>
-                        <div className="grid gap-3">
-                            <label className="text-sm font-semibold" htmlFor="code-1">Code</label>
-                            <Input type='text' placeholder="P001" id="code-1"{...register('code')} />
-                            {errors.code && <span className="text-red-500 text-xs">{errors.code.message}</span>}
-                        </div>
-
-                        <div className="grid gap-3">
-                            <label className="text-sm font-semibold" htmlFor="price-1">Price (EGY)</label>
-                            <Input type="number" placeholder="100" id="price-1"{...register('price')} />
-                            {errors.price && <span className="text-red-500 text-xs">{errors.price.message}</span>}
-                        </div>
-                        <div className="grid gap-3">
-                            <label className="text-sm font-semibold" htmlFor="stock-1">Stock</label>
-                            <Input type='number' placeholder="10" id="stock-1"{...register('stock')} />
-                            {errors.stock && <span className="text-red-500 text-xs">{errors.stock.message}</span>}
-                        </div>
-
                     </div>
                     <DialogFooter className="mt-5">
                         <DialogClose asChild>
                             <Button onClick={() => (reset(), setPreview(''))} className="bg-red-500 text-white hover:bg-red-600">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-amber-600 text-white hover:bg-amber-300">Add Product</Button>
+                        <Button type="submit" className="bg-amber-600 text-white hover:bg-amber-300">Add Category</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
-        </Dialog >
+        </Dialog>
     )
 }

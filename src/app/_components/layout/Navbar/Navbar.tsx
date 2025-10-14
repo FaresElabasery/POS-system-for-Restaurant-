@@ -40,6 +40,8 @@ export default function Navbar() {
         { title: 'Home', link: '/' },
         { title: 'Tables', link: '/table' },
         { title: 'Products', link: '/products' },
+        { title: 'Category', link: '/category' },
+        { title: 'Orders', link: '/orders' },
     ]
     return (
         <header className={`z-30 text-black bg-transparent  w-full sticky top-0  backdrop-blur-2xl border-b`}>

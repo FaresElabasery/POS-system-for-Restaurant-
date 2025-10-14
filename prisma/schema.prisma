@@ -41,11 +41,20 @@ model Table {
 }
 
 model Product {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  code      String      
-  name      String
-  price     Float
-  stock     Int
-  image     String?
-  OrderItem OrderItem[]
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  code       String
+  name       String
+  price      Float
+  stock      Int
+  image      String?
+  OrderItem  OrderItem[]
+  categoryId String      @db.ObjectId
+  category   Category    @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  image    String?
+  products Product[]
 }

@@ -22,9 +22,9 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import { getOrder } from "@/store/slices/ordersSlice";
 
-export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId: string, from?: string }) {
+export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId?: string, from?: string }) {
     const dispatch = useAppDispatch()
-    const { id, name, price, stock, image, code } = product;
+    const { id, name, price, stock, image, code, category: { name: categoryName } } = product;
     const handleAddToTable = async () => {
         const res = await AddProductToOrder({
             tableId: tableId?.toString() || '',
@@ -37,7 +37,7 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
             toast.success(res.message, {
                 position: 'top-right'
             })
-            dispatch(getOrder(tableId));
+            dispatch(getOrder(tableId || ''));
         }
         else {
             toast.error(res.error, {
@@ -49,8 +49,8 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
         const res = await deleteProduct(id)
         if (res.message === 'Product deleted successfully') {
             dispatch(getAllProducts())
-            toast.success(res.message,{
-                position:'top-right'
+            toast.success(res.message, {
+                position: 'top-right'
             })
         }
         else {
@@ -62,7 +62,7 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
     }
 
     return (
-        <div onClick={handleAddToTable} className="bg-gray-200 hover:bg-gray-300 duration-200 active:scale-105 p-4 rounded-2xl shadow-md relative overflow-hidden">
+        <div {...(from !== 'products' ? { onClick: handleAddToTable } : {})} className={`bg-gray-200 hover:bg-gray-300 duration-200 active:scale-105 px-4 py-2 rounded-2xl shadow-md relative overflow-hidden ${from !== 'products' ? 'cursor-pointer' : ''}`}>
             {from === 'products' && (
                 <>
                     <Dialog >
@@ -76,12 +76,12 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
                                     This action cannot be undone. This will permanently delete the product
                                 </DialogDescription>
                             </DialogHeader>
-                            <DialogFooter className="flex justify-end gap-2">
+                            <DialogFooter className="flex justify-end">
                                 <DialogClose asChild>
-                                    <Button variant="outline" className="cursor-pointer w-1/2">Cancel</Button>
+                                    <Button variant="outline" className="cursor-pointer">Cancel</Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button variant="destructive" className="cursor-pointer w-1/2" onClick={handleDeleteProduct}>Delete</Button>
+                                    <Button variant="destructive" className="cursor-pointer" onClick={handleDeleteProduct}>Delete</Button>
                                 </DialogClose>
                             </DialogFooter>
                         </DialogContent>
@@ -89,12 +89,13 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
                 </>
             )}
             <span className="absolute top-2 right-2 text-xs text-orange-500 font-medium">Stock {stock}</span>
+            <p className="absolute top-3 left-3 text-xs font-medium text-gray-500">Code : {code}</p>
             <div className="flex flex-col justify-between ">
-                <p className="text-sm text-gray-500">Product Code : {code}</p>
-                <div className="flex  justify-between my-3">
-                    <div className="flex flex-col gap-4">
+                <div className={`flex justify-between my-1 ${from !== 'products' ? 'mt-8' : ''}`}>
+                    <div className="flex flex-col gap-2">
                         <h3 className="font-bold text-xl">{name}</h3>
-                        <p className="">Price: {price} EGY</p>
+                        <h6 className="text-xs w-fit px-2 font-medium py-1 text-orange-500 bg-white rounded-2xl">{categoryName}</h6>
+                        <p className="text-sm text-gray-600">Price: <span className="font-medium text-lg">{price} EGP</span></p>
                     </div>
                     <Image src={image || placeholder} alt={name} width={50} height={50} className="rounded-full size-20" />
                 </div>
