@@ -29,9 +29,21 @@ export async function DELETE(req: Request) {
     const body = await req.json()
     const { id } = body
     try {
+        const existing = await prisma.product.findFirst({
+            where: {
+                categoryId: id
+            }
+        })
+        if (existing) {
+            return NextResponse.json({ error: 'Category is in use in a product' }, { status: 400 })
+        }
+
         const deletedCategory = await prisma.category.delete({
             where: {
                 id
+            },
+            include: {
+                products: true
             }
         })
         return NextResponse.json({ message: 'category deleted successfully', deletedCategory }, { status: 200 })

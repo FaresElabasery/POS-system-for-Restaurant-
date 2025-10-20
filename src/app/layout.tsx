@@ -3,7 +3,8 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "./_components/layout/Navbar/Navbar";
-import Providers from "./providers";
+import MainProvider from "./_components/MainProvider/MainProvider";
+import { Provider } from "react-redux";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -23,11 +24,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body
         className={`${roboto.variable} antialiased`}
       >
-        <Providers>
+        <MainProvider>
           <Navbar />
           <Toaster />
           {children}
-        </Providers>
+        </MainProvider>
       </body>
     </html>
   );

@@ -151,3 +151,12 @@ body {
 .filter-btn:hover {
   @apply bg-amber-200 text-foreground;
 }
+
+/* navlink active */
+.navbarLink {
+  @apply duration-200 relative;
+}
+.active , .navbarLink:hover {
+  @apply border-b-2 border-orange-500 font-medium ;
+}
+

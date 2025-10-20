@@ -24,7 +24,7 @@ import { getOrder } from "@/store/slices/ordersSlice";
 
 export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId?: string, from?: string }) {
     const dispatch = useAppDispatch()
-    const { id, name, price, stock, image, code, category: { name: categoryName } } = product;
+    const { id, name, price, stock, image, code, deleted, category: { name: categoryName } } = product;
     const handleAddToTable = async () => {
         const res = await AddProductToOrder({
             tableId: tableId?.toString() || '',
@@ -62,7 +62,7 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
     }
 
     return (
-        <div {...(from !== 'products' ? { onClick: handleAddToTable } : {})} className={`bg-gray-200 hover:bg-gray-300 duration-200 active:scale-105 px-4 py-2 rounded-2xl shadow-md relative overflow-hidden ${from !== 'products' ? 'cursor-pointer' : ''}`}>
+        <div {...(from !== 'products' ? { onClick: handleAddToTable } : {})} className={`bg-gray-200 hover:bg-gray-300 duration-200 active:scale-105 px-4 py-2 rounded-2xl shadow-md relative overflow-hidden ${stock < 1 && from !== 'products' ? 'hidden' : ''} ${from !== 'products' ? 'cursor-pointer' : ''}`}>
             {from === 'products' && (
                 <>
                     <Dialog >
@@ -94,7 +94,10 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
                 <div className={`flex justify-between my-1 ${from !== 'products' ? 'mt-8' : ''}`}>
                     <div className="flex flex-col gap-2">
                         <h3 className="font-bold text-xl">{name}</h3>
-                        <h6 className="text-xs w-fit px-2 font-medium py-1 text-orange-500 bg-white rounded-2xl">{categoryName}</h6>
+                        <div className="flex gap-2">
+                            <h6 className="text-xs w-fit px-2 font-medium py-1 text-orange-500 bg-white rounded-2xl">{categoryName}</h6>
+                            {deleted && <h6 className="text-xs w-fit px-2 font-medium py-1 text-white bg-red-500 rounded-2xl">Deleted</h6>}
+                        </div>
                         <p className="text-sm text-gray-600">Price: <span className="font-medium text-lg">{price} EGP</span></p>
                     </div>
                     <Image src={image || placeholder} alt={name} width={50} height={50} className="rounded-full size-20" />

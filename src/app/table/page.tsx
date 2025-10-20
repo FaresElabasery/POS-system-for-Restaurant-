@@ -31,7 +31,7 @@ export default function Table() {
 
     return (
         <div className="bg-white mt-5">
-            <div className="container">
+            <div className="container"> 
                 <div className='title my-5 flex-center gap-2'>
                     <h1 className='text-5xl font-bold text-center'>All Tables</h1>
                     <AddTableModal />

@@ -57,7 +57,7 @@ export default function OrderColumn({ order, tableId }: { order: IOrder, tableId
                     </div>
                     <div className="flex flex-col gap-2 mt-4">
                         <Button className="bg-amber-400 hover:bg-amber-500 text-white px-4 py-2 rounded-md w-full" disabled={order?.items?.length === 0 || order === null} onClick={() => handlePlaceOrder()}>Place Order</Button>
-                        <Button className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md w-full" disabled={order?.items?.length === 0 || order === null} onClick={() => handleCancelOrder()}>Cancel Order</Button>
+                        <Button className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md w-full" disabled={order === null} onClick={() => handleCancelOrder()}>Cancel Order</Button>
                     </div>
                 </div>
             </div>

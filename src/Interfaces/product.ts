@@ -7,5 +7,6 @@ export type IProduct = {
     stock: number,
     image?: string
     category: string
+    deleted: boolean
 }
 
