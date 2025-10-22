@@ -88,6 +88,14 @@ export async function PATCH(
         if (!existingItem) {
             return NextResponse.json({ error: "Product not found in order" }, { status: 404 });
         }
+        const existingProduct = await prisma.product.findUnique({
+            where: {
+                id: productId
+            }
+        })
+        if (existingProduct?.stock && existingProduct.stock < (existingItem.count + count)) {
+            return NextResponse.json({ error: "Not enough stock" }, { status: 400 });
+        }
         await prisma.orderItem.update({
             where: { id: existingItem.id },
             data: { count: existingItem.count + count },

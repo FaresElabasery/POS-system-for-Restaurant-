@@ -26,7 +26,6 @@ interface TableDetailsProps {
 export default function TableDetails({ id }: TableDetailsProps) {
     const dispatch = useAppDispatch()
     const [tableName, setTableName] = useState<string>('')
-    // const [categories, setCategories] = useState<ICategory[]>([])
     const categories = useAppSelector(state => state.category.data);
 
     const [SearchProduct, setSearchProduct] = useState('')
@@ -93,7 +92,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                                 <OrderColumn order={order} tableId={tableId} />
                             </DialogContent>
                         </Dialog>
-                     
+
                         <div className="filter w-full">
                             <h1 className="text-2xl font-medium mb-5 text-center sm:text-start">New Order for <span className="font-bold text-orange-400 capitalize text-3xl">{tableName}</span> </h1>
                             <div className="search filter gap-3 flex items-center justify-between w-full">
@@ -110,7 +109,8 @@ export default function TableDetails({ id }: TableDetailsProps) {
                             <div className="categories flex justify-center flex-wrap gap-4 mt-5 overflow-y-auto max-h-200">
                                 <div onClick={() => { setCategoryFilter(null) }} className={` flex items-center gap-3 !rounded-lg border !px-6 filter-btn group  ${categoryFilter === null ? 'bg-amber-400' : ''}`}>
                                     <div className="text-sm font-bold text-main-color">All</div>
-                                </div>                                {categories.map(category => (
+                                </div>
+                                {categories && categories.map(category => (
                                     <CheckBoxFilterCard setCategoryFilter={setCategoryFilter} categoryFilter={categoryFilter} key={category.id} category={category} />
                                 ))}
                             </div>
@@ -120,9 +120,9 @@ export default function TableDetails({ id }: TableDetailsProps) {
                                 <SkeletonCard key={index} />
                             ))}
                             {handleSearchProductByCode()?.map((product) => (
-                                <ProductCard key={product.id} product={product} tableId={tableId} />
+                                <ProductCard key={product.id} order={order} product={product} tableId={tableId} />
                             ))}
-                            {handleSearchProductByCode()?.length === 0 && products.length !== 0 &&(
+                            {handleSearchProductByCode()?.length === 0 && products.length !== 0 && (
                                 <div className="text-center text-gray-500 text-4xl mt-10 font-medium col-span-3">No products found</div>
                             )}
                         </div>

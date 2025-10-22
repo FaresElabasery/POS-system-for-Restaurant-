@@ -21,10 +21,12 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import { getOrder } from "@/store/slices/ordersSlice";
+import { IOrder } from "@/Interfaces/order";
 
-export default function ProductCard({ product, tableId, from }: { product: IProduct, tableId?: string, from?: string }) {
+export default function ProductCard({ product, tableId, from, order }: { product: IProduct, tableId?: string, from?: string, order?: IOrder }) {
     const dispatch = useAppDispatch()
     const { id, name, price, stock, image, code, deleted, category: { name: categoryName } } = product;
+    const orderCount = order?.items?.find((item) => item.productId === id)?.count || 0;
     const handleAddToTable = async () => {
         const res = await AddProductToOrder({
             tableId: tableId?.toString() || '',
@@ -62,12 +64,12 @@ export default function ProductCard({ product, tableId, from }: { product: IProd
     }
 
     return (
-        <div {...(from !== 'products' ? { onClick: handleAddToTable } : {})} className={`bg-gray-200 hover:bg-gray-300 duration-200 active:scale-105 px-4 py-2 rounded-2xl shadow-md relative overflow-hidden ${stock < 1 && from !== 'products' ? 'hidden' : ''} ${from !== 'products' ? 'cursor-pointer' : ''}`}>
+        <div {...(from !== 'products' ? stock > orderCount && { onClick: handleAddToTable } : {})} className={`bg-gray-200 ${stock == orderCount && '!bg-red-200 !cursor-not-allowed'} hover:bg-gray-300 duration-200 active:scale-105 px-4 py-2 rounded-2xl shadow-md relative overflow-hidden ${stock < 1 && from !== 'products' ? 'hidden' : ''} ${from !== 'products' ? 'cursor-pointer' : ''}`}>
             {from === 'products' && (
                 <>
                     <Dialog >
                         <DialogTrigger>
-                            <button className="absolute bottom-0 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</button>
+                            <span className="absolute bottom-0 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</span>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>

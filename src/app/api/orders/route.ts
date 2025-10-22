@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -28,6 +27,13 @@ export async function POST(req: Request) {
                     const existingItem = existingOrder.items.find(
                         (i) => i.productId === item.productId
                     );
+                    const existingProduct = await prisma.product.findUnique({
+                        where: { id: item.productId },
+                    });
+                    
+                    if (existingProduct?.stock && existingProduct.stock < existingItem?.count + item.count) {
+                        return NextResponse.json({ error: "Not enough stock" }, { status: 400 });
+                    }
 
                     if (existingItem) {
                         await prisma.orderItem.update({
@@ -50,7 +56,6 @@ export async function POST(req: Request) {
                 where: { id: existingOrder.id },
                 include: { items: { include: { product: true } } },
             });
-            revalidateTag('orders') 
             return NextResponse.json(
                 { message: "Order updated successfully", order: updatedOrder },
                 { status: 200 }
@@ -76,7 +81,6 @@ export async function POST(req: Request) {
                 where: { id: tableId },
                 data: { status: "opened" },
             });
-            revalidateTag('order')
             return NextResponse.json(
                 { message: "Order created successfully", order: newOrder },
                 { status: 201 }
@@ -85,5 +89,34 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("Error creating/updating order:", error);
         return NextResponse.json({ error: "Failed to create or update order" }, { status: 500 });
+    }
+}
+
+
+export async function GET(req: Request) {
+    try {
+        const orders = await prisma.order.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                table: true,
+                items: {
+                    include: {
+                        product: true
+                    }
+                },
+            },
+        })
+        const ordersWithTotal = orders.map(order => {
+            const totalPrice = order.items.reduce((acc, item) => {
+                return acc + (item.count * (item.product?.price || 0));
+            }, 0);
+            return { ...order, totalPrice };
+        });
+        return NextResponse.json({ orders: ordersWithTotal }, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
     }
 }

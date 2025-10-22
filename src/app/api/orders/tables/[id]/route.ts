@@ -46,7 +46,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         }
 
         const orders = await prisma.order.findFirst({
-            where: { tableId: tableId },
+            where: {
+                tableId: tableId,
+                 status: "opened"
+            },
             include: {
                 table: true,
                 items: {
@@ -148,13 +151,13 @@ export async function PATCH(req: Request) {
             });
         }
 
-        await prisma.order.delete({
-            where: { id },
-            include: {
-                items: true,
-            },
+        await prisma.order.update({
+            where: { id: order.id },
+            data: {
+                status: "closed"
+            }
         });
-        
+
 
         await prisma.table.update({
             where: { id: order.tableId },

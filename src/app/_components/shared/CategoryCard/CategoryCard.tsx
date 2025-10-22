@@ -40,7 +40,7 @@ export default function CategoryCard({ category }: { category: ICategory }) {
         <div className="bg-gray-100 size-40 flex-center hover:bg-gray-200 duration-200 active:scale-105 group rounded-2xl shadow-md relative overflow-hidden w-full sm:mx-auto">
             <Dialog >
                 <DialogTrigger>
-                    <button className="absolute bottom-0 z-10 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</button>
+                    <span className="absolute bottom-0 z-10 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</span>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>

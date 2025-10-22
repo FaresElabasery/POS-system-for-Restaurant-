@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/sheet";
 import { ChevronDown, Menu } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -32,7 +31,7 @@ import { toast } from 'sonner';
 export default function Navbar() {
     const [position, setPosition] = useState("bottom")
     const [isOpenNav, setisOpenNav] = useState(false)
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     const pathname = usePathname()
     console.log(pathname);
@@ -46,15 +45,14 @@ export default function Navbar() {
             toast.success('Logout success')
             location.href = 'login'
         } catch (error) {
+            console.log(error);
             toast.error('Logout failed')
         }
     }
     const userLinks = [
-        { title: 'Home', link: '/' },
         { title: 'Tables', link: '/table' },
     ]
     const adminLinks = [
-        { title: 'Home', link: '/' },
         { title: 'Tables', link: '/table' },
         { title: 'Products', link: '/products' },
         { title: 'Category', link: '/category' },
@@ -66,11 +64,10 @@ export default function Navbar() {
                 <div className='flex items-center justify-between h-15'>
                     {/* Brand */}
                     <div className='flex items-center gap-4'>
-                        <Link href={'/'} className='flex items-center gap-2'>
-                            <span className='sr-only'>Spherule</span>
+                        <Link href={'/table'} className='flex items-center gap-2'>
+                            <span className='sr-only'>POS System</span>
                             <div className='text-2xl font-bold flex items-center gap-2'>
-                                <Image src={'logo.svg'} alt='logo' width={25} height={25}></Image>
-                                <h1 >Cashier</h1>
+                                <h1 >POS System</h1>
                             </div>
                         </Link>
                         <DropdownMenu>
@@ -87,24 +84,21 @@ export default function Navbar() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <nav className='hidden md:flex items-center justify-between gap-8 text-center -ms-20'>
-                        {session?.user?.role === 'admin' ? adminLinks.map(({ title, link }, i) =>
-                            <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
-                        ) : userLinks.map(({ title, link }, i) =>
-                            <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
-                        )}
+                    <nav className='hidden md:flex items-center gap-8 w-1/3'>
+                        {session &&
+                            <>
+                                {session?.user?.role === 'admin' ? adminLinks.map(({ title, link }, i) =>
+                                    <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
+                                ) : userLinks.map(({ title, link }, i) =>
+                                    <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
+                                )}
+                            </>
+                        }
                     </nav>
 
                     {/* actions btns in desktop */}
-                    <div className='flex items-center w-1/8'>
-                        {!session ? (
-                            <>
-                                <Link href="/login">Login</Link>
-                                <Button asChild className='font-semibold capitalize rounded-full   dark:text-Bg ms-2 hover:text-text2 border-1'>
-                                    <Link className='font-semibold capitalize' href="/register">Register</Link>
-                                </Button>
-                            </>
-                        ) :
+                    <div className='flex items-center -ms-10 md:-ms-0'>
+                        {session && (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <div className='md:flex items-center gap-2 hidden md:w-full bg-gray-50 rounded-2xl'>
@@ -124,29 +118,31 @@ export default function Navbar() {
                                     <DropdownMenuItem onClick={handleLogout} className='bg-red-500 font-bold capitalize text-white hover:!bg-red-600 hover:!text-white cursor-pointer'>logout</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
-                        }
+                        )}
                     </div>
                     {/* mobile menu */}
                     <div className='flex md:hidden'>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div className='flex items-center gap-2 md:hidden bg-gray-50 rounded-2xl'>
-                                    <Avatar className='size-10 '>
-                                        <AvatarImage src="https://github.com/shadcn.png" />
-                                        <AvatarFallback>CN</AvatarFallback>
-                                    </Avatar>
-                                    <h2 className='font-semibold text-sm hidden md:block'>{session?.user?.role === 'admin' ? 'Admin' : ''} {session?.user?.name}</h2>
-                                    <ChevronDown className='hidden md:block' size={25} />
-                                </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-54">
-                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuLabel className='md:hidden'>{session?.user?.role === 'admin' ? 'Admin' : ''} {session?.user?.name}</DropdownMenuLabel>
-                                <DropdownMenuLabel>{session?.user?.email}</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={handleLogout} className='bg-red-500 font-bold capitalize text-white hover:!bg-red-600 hover:!text-white cursor-pointer'>logout</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {session &&
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <div className='flex items-center gap-2 md:hidden bg-gray-50 rounded-2xl'>
+                                        <Avatar className='size-10 '>
+                                            <AvatarImage src="https://github.com/shadcn.png" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        <h2 className='font-semibold text-sm hidden md:block'>{session?.user?.role === 'admin' ? 'Admin' : ''} {session?.user?.name}</h2>
+                                        <ChevronDown className='hidden md:block' size={25} />
+                                    </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-54">
+                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel className='md:hidden'>{session?.user?.role === 'admin' ? 'Admin' : ''} {session?.user?.name}</DropdownMenuLabel>
+                                    <DropdownMenuLabel>{session?.user?.email}</DropdownMenuLabel>
+                                    <DropdownMenuItem onClick={handleLogout} className='bg-red-500 font-bold capitalize text-white hover:!bg-red-600 hover:!text-white cursor-pointer'>logout</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        }
                         <Sheet open={isOpenNav} onOpenChange={setisOpenNav}>
                             <SheetTrigger asChild>
                                 <Button variant={'ghost'} className='md:hidden p-2 rounded-md'>
@@ -155,18 +151,21 @@ export default function Navbar() {
                             </SheetTrigger>
                             <SheetContent side='left'>
                                 <SheetHeader>
-                                    <Link href={'/'} className='flex items-center gap-2'>
-                                        <span className='sr-only'> Cashier</span>
-                                        <Image src="/logo.svg" alt="logo" width={30} height={30} />
-                                        <h1 className='text-lg font-semibold'> Cashier</h1>
+                                    <Link href={'/table'} className='flex items-center gap-2'>
+                                        <span className='sr-only'> POS System</span>
+                                        <h1 className='text-lg font-semibold'> POS System</h1>
                                     </Link>
                                 </SheetHeader>
                                 <nav className='flex flex-col items-center gap-6  '>
-                                    {session?.user?.role === 'admin' ? adminLinks.map(({ title, link }, i) =>
-                                        <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
-                                    ) : userLinks.map(({ title, link }, i) =>
-                                        <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
-                                    )}
+                                    {session &&
+                                        <>
+                                            {session?.user?.role === 'admin' ? adminLinks.map(({ title, link }, i) =>
+                                                <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
+                                            ) : userLinks.map(({ title, link }, i) =>
+                                                <Link className={`text-sm navbarLink ${pathname === link ? 'active' : ''} decoration-gray-400 dark:decoration-white `} href={link} key={i}>{title}</Link>
+                                            )}
+                                        </>
+                                    }
                                 </nav>
                                 <SheetFooter>
                                     <Button asChild onClick={handleCloseMenu} className=' capitalize text-text bg-button ms-2 hover:text-text2 border-1'>

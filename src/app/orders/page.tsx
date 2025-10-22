@@ -1,6 +1,13 @@
 import { Separator } from "@/components/ui/separator";
+import { IOrder } from "@/Interfaces/order";
+import { getAllOrder } from "@/services/orders";
+import OrderSammaryCard from "../_components/shared/OrderSammaryCard/OrderSammaryCard";
+import Link from "next/link";
+import OrderSammaryModal from "../_components/shared/OrderSammaryModal/OrderSammaryModal";
 
-export default function page() {
+export default async function page() {
+    const orders = await getAllOrder()
+    const orderCodes = `ORD-${Date.now().toString().slice(-6)}`
     return (
         <div className="orders">
             <div className="container w-full md:w-10/12 mx-auto">
@@ -10,11 +17,18 @@ export default function page() {
                     </div>
                     <div className='flex items-end flex-col'>
                         <Separator className="my-4" />
-                        <span className='text-sm font-medium text-center text-gray-400'>Orders Number : </span>
+                        <span className='text-sm font-medium text-center text-gray-400'>Orders Number :{orders.length} </span>
                     </div>
-                    <div className="orderCard border-s-4 mt-4 border-orange-500 rounded-2xl p-4  mx-auto shadow flex flex-col gap-2">
-                        <h1 className="text-2xl font-bold">Order #122123</h1>
-                        <p className="text-sm font-medium  text-gray-400">Table </p>
+                    <div className="orders-list flex flex-col gap-4">
+                        {orders.map((order: IOrder) => (
+                            order.status == 'opened' ? (
+                                <Link href={`/table/${order.tableId}`}  key={order.id + order.tableId}>
+                                    <OrderSammaryCard order={order} orderCodes={orderCodes} />
+                                </Link>
+                            ) :
+                                <OrderSammaryModal orderCodes={orderCodes} key={orderCodes} order={order} />
+                        ))}
+
                     </div>
                 </div>
             </div>

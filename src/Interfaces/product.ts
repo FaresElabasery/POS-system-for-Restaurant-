@@ -1,3 +1,4 @@
+import { ICategory } from "./category"
 
 export type IProduct = {
     id: string,
@@ -6,7 +7,8 @@ export type IProduct = {
     price: number,
     stock: number,
     image?: string
-    category: string
+    category: ICategory
     deleted: boolean
 }
+
 

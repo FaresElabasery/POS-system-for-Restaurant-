@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ POS Restaurant — Next.js App
 
-## Getting Started
+A simple yet powerful **Point of Sale (POS)** web application for restaurants, built with **Next.js**, **TypeScript**, **Prisma**, and **Cloudinary** for image uploads.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+- ✅ **Product & Category Management** – Create and list products and categories.
+- 📷 **Image Uploads** – Handled via API route using **Cloudinary**.  
+  → [`POST`](src/app/api/upload-image/route.ts)
+- 🧾 **Client-side Forms** – Built with `react-hook-form` and validated with `zod`.
+- 🧩 **Reusable UI Components**:
+  - [`Input`](src/components/ui/input.tsx)
+  - [`AddProductModal`](src/app/_components/shared/AddProductModal/AddProductModal.tsx)
+  - [`AddCategoryModal`](src/app/_components/shared/AddCategoryModal/AddCategoryModal.tsx)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js (App Router)](https://nextjs.org/docs/app)
+- **Language**: TypeScript
+- **Database**: Prisma ORM with PostgreSQL / SQLite  
+  → [`prisma/schema.prisma`](prisma/schema.prisma)
+- **Image Hosting**: [Cloudinary](https://cloudinary.com/)
+- **Styling**: Tailwind CSS + PostCSS
+- **Forms**: React Hook Form + Zod
+
+---
+
+## ⚙️ Setup & Installation
+
+### Environment Variables
+
+Create a `.env.local` file with:
+
+```env
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+DATABASE_URL="postgresql://user:pass@host:port/db?schema=public"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Local Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install dependencies**:
+```bash
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Setup database**:
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-## Learn More
+3. **Start development server**:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Visit `http://localhost:3000` to view the app.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Run production build
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

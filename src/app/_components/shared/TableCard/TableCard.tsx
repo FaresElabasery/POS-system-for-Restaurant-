@@ -25,7 +25,7 @@ export default function TableCard({ item, from }: { item: ITable, from?: 'table'
             {from === 'table' && (
                 <Dialog >
                     <DialogTrigger>
-                        <button className="absolute z-10 bottom-0 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</button>
+                        <span className="absolute z-10 bottom-0 -right-10 hover:right-0 duration-200 text-xs text-white font-medium bg-red-500 flex items-center p-1 hover:bg-red-600  rounded-s-2xl gap-1 cursor-pointer "><Trash className="size-4" /> Delete</span>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
