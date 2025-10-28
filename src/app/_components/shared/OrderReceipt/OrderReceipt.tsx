@@ -7,7 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import { useRef } from "react";
 
 type OrderReceiptProps = {
-    order: IOrder & { totalPrice: number },
+    order: IOrder,
     orderCodes: string
 }
 export default function OrderReceipt({ order, orderCodes }: OrderReceiptProps) {

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ICategory } from "@/Interfaces/category";
+import { IProduct } from "@/Interfaces/product";
 import { getTables } from "@/services/table";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getCategory } from "@/store/slices/categorySlice";
@@ -119,7 +120,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                             {products.length === 0 && Array.from({ length: 6 }).map((_, index) => (
                                 <SkeletonCard key={index} />
                             ))}
-                            {handleSearchProductByCode()?.map((product) => (
+                            {handleSearchProductByCode()?.map((product :IProduct) => (
                                 <ProductCard key={product.id} order={order} product={product} tableId={tableId} />
                             ))}
                             {handleSearchProductByCode()?.length === 0 && products.length !== 0 && (

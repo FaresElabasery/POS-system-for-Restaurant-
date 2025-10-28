@@ -1,3 +1,4 @@
+import { CreateProductBody } from "@/Interfaces/product";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export async function getProducts() {
@@ -11,7 +12,7 @@ export async function getProducts() {
     }
 }
 
-export async function createProduct(body) {
+export async function createProduct(body:CreateProductBody) {
     try {
         const res = await fetch(`${baseUrl}/api/products`, {
             method: 'POST',
