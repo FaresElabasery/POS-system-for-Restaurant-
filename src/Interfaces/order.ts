@@ -8,6 +8,7 @@ export interface IOrder {
     createdAt: string
     table: ITable
     items: Item[]
+    totalPrice?: number
 }
 export interface Item {
     id: string

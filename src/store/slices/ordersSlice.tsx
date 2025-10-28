@@ -15,7 +15,7 @@ const orderSlice = createSlice({
     initialState: {
         data: {} as IOrder,
         loading: false,
-        error: null,
+        error: '' as string | null,
     },
     reducers: {},
     extraReducers: (builder) => {

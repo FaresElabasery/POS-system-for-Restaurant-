@@ -35,6 +35,7 @@ export default function Navbar() {
 
     const pathname = usePathname()
     console.log(pathname);
+    
 
     const handleCloseMenu = () => {
         setisOpenNav(false)

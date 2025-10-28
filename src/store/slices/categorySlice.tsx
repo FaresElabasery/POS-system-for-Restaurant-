@@ -15,7 +15,7 @@ const categorySlice = createSlice({
     initialState: {
         data: [] as ICategory[],
         loading: false,
-        error: null,
+        error: '' as string | null,
     },
     reducers: {},
     extraReducers: (builder) => {

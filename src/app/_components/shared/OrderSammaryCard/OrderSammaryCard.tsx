@@ -39,7 +39,7 @@ export default function OrderSammaryCard({ order, orderCodes }: { order: IOrder,
                     </div>
                 ))}
             </div>
-            <div className="total-price text-right text-xl   font-bold text-orange-500">Total Price: ${order.totalPrice.toFixed(2)}</div>
+            <div className="total-price text-right text-xl   font-bold text-orange-500">Total Price: ${order.totalPrice?.toFixed(2) || '0.00'}</div>
             <p className="text-xs font-semibold text-gray-500 text-right">
                 Date: {moment(order.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
             </p>

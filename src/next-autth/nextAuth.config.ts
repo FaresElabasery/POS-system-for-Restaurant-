@@ -7,7 +7,7 @@ export const nextAuthConfig: NextAuthOptions = {
             name: 'Pos Resturant',
             authorize: async (credentials) => {
                 try {
-                    const res = await fetch(`${process.env.BASE_URL}/api/v1/auth/signin`, {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/signin`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
