@@ -32,7 +32,7 @@ export default function AddProductModal() {
         'categoryId': zod.string().min(1, 'Please select a category')
     })
 
-    const { register, handleSubmit, formState: { errors }, control, setValue, reset, setError, getValues } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, setValue, reset, setError } = useForm({
         'defaultValues': {
             'name': '',
             'code': '',
@@ -124,7 +124,7 @@ export default function AddProductModal() {
                                 <Controller
                                     name="image"
                                     control={control}
-                                    render={({ field: { value } }) => (
+                                    render={() => (
                                         <Image
                                             src={preview || '/placeholder.svg'}
                                             alt="Product"

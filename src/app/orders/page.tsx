@@ -17,7 +17,7 @@ export default async function page() {
                     </div>
                     <div className='flex items-end flex-col'>
                         <Separator className="my-4" />
-                        <span className='text-sm font-medium text-center text-gray-400'>Orders Number :{orders.length} </span>
+                        <span className='text-sm font-medium text-center text-gray-400'>Orders Number :{orders.length || 'No Orders'} </span>
                     </div>
                     <div className="orders-list flex flex-col gap-4">
                         {orders.map((order: IOrder) => (

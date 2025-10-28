@@ -1,6 +1,8 @@
 'use client'
 import Image from "next/image";
 
+import { ICategory } from "@/Interfaces/category";
+import { deleteCategory } from "@/app/category/category.actions";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -11,17 +13,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAppDispatch } from '@/store/hooks';
 import placeholder from '@images/placeholder.svg';
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Trash } from "lucide-react";
-import { ICategory } from "@/Interfaces/category";
-import { deleteCategory } from "@/app/category/category.actions";
 import { toast } from "sonner";
 
 export default function CategoryCard({ category }: { category: ICategory }) {
-    const dispatch = useAppDispatch()
-
     const handleDeleteCategory = async () => {
         const res = await deleteCategory({ id: category.id })
         if (res.message) {

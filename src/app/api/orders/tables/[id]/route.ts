@@ -24,7 +24,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET({ params }: { params: { id: string } }) {
     try {
         const tableId = params.id
         if (!tableId) {

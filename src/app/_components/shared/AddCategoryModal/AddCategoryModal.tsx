@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useAppDispatch } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import Image from "next/image";
@@ -15,7 +14,6 @@ import * as zod from 'zod';
 
 
 export default function AddCategoryModal() {
-    const dispatch = useAppDispatch()
     const [openModal, setOpenModal] = useState(false)
     const [preview, setPreview] = useState('')
     const schema = zod.object({
@@ -100,7 +98,7 @@ export default function AddCategoryModal() {
                                 <Controller
                                     name="image"
                                     control={control}
-                                    render={({ field: { value } }) => (
+                                    render={() => (
                                         <Image
                                             src={preview || '/placeholder.svg'}
                                             alt="Product"

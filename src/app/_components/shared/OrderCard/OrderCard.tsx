@@ -3,7 +3,6 @@ import { deleteProductFromOrder, UpdateProductCountInOrder } from "@/app/table/[
 import { IProduct } from "@/Interfaces/product";
 import { useAppDispatch } from "@/store/hooks";
 import { getOrder } from "@/store/slices/ordersSlice";
-import { getAllProducts } from "@/store/slices/productSlice";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
