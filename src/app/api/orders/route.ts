@@ -93,7 +93,7 @@ export async function POST(req: Request) {
 }
 
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const orders = await prisma.order.findMany({
             orderBy: {

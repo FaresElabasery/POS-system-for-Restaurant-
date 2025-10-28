@@ -1,10 +1,9 @@
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 import Navbar from "./_components/layout/Navbar/Navbar";
 import MainProvider from "./_components/MainProvider/MainProvider";
-import { Provider } from "react-redux";
+import "./globals.css";
 
 const roboto = Roboto({
   variable: "--font-roboto",

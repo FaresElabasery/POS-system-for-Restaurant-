@@ -64,18 +64,19 @@ export default function TableDetails({ id }: TableDetailsProps) {
     }
 
     const tableId = id;
-    async function handleGetTableName() {
-        const table = await getTables();
-        const tableInfo = table?.tables.filter((item: { id: string }) => item.id === tableId)[0];
-        setTableName(tableInfo?.name);
-    }
+
 
     useEffect(() => {
+        async function handleGetTableName() {
+            const table = await getTables();
+            const tableInfo = table?.tables.filter((item: { id: string }) => item.id === tableId)[0];
+            setTableName(tableInfo?.name);
+        }
         handleGetTableName();
         dispatch(getCategory());
         dispatch(getAllProducts());
         dispatch(getOrder(tableId));
-    }, [])
+    }, [dispatch, tableId])
 
     return (
         <div className=" mt-10 mx-auto">
@@ -120,7 +121,7 @@ export default function TableDetails({ id }: TableDetailsProps) {
                             {products.length === 0 && Array.from({ length: 6 }).map((_, index) => (
                                 <SkeletonCard key={index} />
                             ))}
-                            {handleSearchProductByCode()?.map((product :IProduct) => (
+                            {handleSearchProductByCode()?.map((product: IProduct) => (
                                 <ProductCard key={product.id} order={order} product={product} tableId={tableId} />
                             ))}
                             {handleSearchProductByCode()?.length === 0 && products.length !== 0 && (

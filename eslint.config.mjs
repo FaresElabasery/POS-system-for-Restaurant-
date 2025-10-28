@@ -1,6 +1,7 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
+import next from 'eslint-config-next'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,7 +19,24 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".prisma/**",
     ],
+  },
+    next(),
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unnecessary-type-constraint': 'off',
+      '@typescript-eslint/ban-types': [
+        'error',
+        {
+          extendDefaults: true,
+          types: {
+            '{}': false,
+          },
+        },
+      ],
+    },
   },
 ];
 

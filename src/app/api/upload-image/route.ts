@@ -16,21 +16,20 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'No image provided' }, { status: 400 })
         }
 
-        // تحويل الصورة إلى base64
         const arrayBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
         const base64 = `data:${file.type};base64,${buffer.toString('base64')}`
 
-        // رفع إلى Cloudinary
         const uploadResponse = await cloudinary.uploader.upload(base64, {
             folder: 'pos_products',
         })
 
         return NextResponse.json({ url: uploadResponse.secure_url }, { status: 200 })
-    } catch (error: any) {
+    } catch (error ) {
+        const message = error instanceof Error ? error.message : 'Upload failed'
         console.error('Cloudinary upload failed:', error)
         return NextResponse.json(
-            { error: error.message || 'Upload failed' },
+            { error: message || 'Upload failed' },
             { status: 500 }
         )
     }
